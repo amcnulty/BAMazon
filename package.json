@@ -1,0 +1,24 @@
+{
+  "name": "bamazon-customer",
+  "version": "1.0.0",
+  "description": "The BAMazon customer interface.",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amcnulty/BAMazon.git"
+  },
+  "author": "Aaron Michael McNulty",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amcnulty/BAMazon/issues"
+  },
+  "homepage": "https://github.com/amcnulty/BAMazon#readme",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "inquirer": "^3.3.0",
+    "mysql": "^2.15.0"
+  }
+}
