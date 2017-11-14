@@ -1,7 +1,7 @@
 {
   "name": "bamazon-customer",
   "version": "1.0.0",
-  "description": "The BAMazon customer interface.",
+  "description": "The BAMazon command line interface for customers, managers, and supervisors.",
   "main": "bamazonCustomer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
