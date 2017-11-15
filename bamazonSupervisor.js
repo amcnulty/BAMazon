@@ -19,6 +19,7 @@
  */
 // Include depended files and libraries.
 require('dotenv').config();
+require('console.table');
 const inquirer = require('inquirer');
 const MYSQL = require('mysql');
 /**
@@ -54,7 +55,7 @@ var supervisor = {
     showMenu: function() {
         inquirer.prompt([
             {
-                type: 'input',
+                type: 'list',
                 message: "\nBAMazon Supervisor Portal\n\nPlease choose an action from the list below.",
                 choices: [
                     'View Product Sales by Department',
@@ -69,6 +70,23 @@ var supervisor = {
     },
     showDepartmentSales: function() {
         console.log("Showing Department Sales.");
+        supervisor.connection.query('SELECT department_id, departments.department_name, over_head_costs, SUM(product_sales) AS product_sales, (SUM(product_sales) - over_head_costs) AS total_profit FROM products INNER JOIN departments ON products.department_name = departments.department_name GROUP BY departments.department_name;', function(err, results) {
+            if (err) throw err;
+            var myTable = [];
+            for (var i = 0; i < results.length; i++) {
+                myTable.push(
+                    {
+                        department_id: results[i].department_id,
+                        department_name: results[i].department_name,
+                        over_head_costs: results[i].over_head_costs,
+                        product_sales: results[i].product_sales,
+                        total_profit: results[i].total_profit
+                    }
+                );
+            }
+            console.table(myTable);
+            supervisor.showMenu();
+        });
     },
     createNewDepartment: function() {
         console.log("Creating New Department"); 

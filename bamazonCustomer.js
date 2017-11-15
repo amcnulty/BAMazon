@@ -139,6 +139,9 @@ var orders = {
         ], function(err, results) {
             if (err) throw err;
         });
+        orders.connection.query("UPDATE products SET product_sales = product_sales + " + cost + " WHERE item_id = " + itemID, function(err, results) {
+            if (err) throw err;
+        });
         console.log("\nThe cost of your order is: $" + cost);
         orders.askForNewOrder();
     },

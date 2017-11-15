@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/amcnulty/BAMazon#readme",
   "dependencies": {
+    "console.table": "^0.9.1",
     "dotenv": "^4.0.0",
     "inquirer": "^3.3.0",
     "mysql": "^2.15.0"
