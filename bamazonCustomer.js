@@ -79,10 +79,10 @@ var orders = {
                 message: '\nPlease enter the ID of the product you wish to buy.',
                 validate: function(id) {
                     if (Number.isInteger(parseFloat(id))) {
-                        if (parseFloat(id) > 0 && parseFloat(id) < 11) return true;
-                        else return "\nChoose a number between 0 - 10.";
+                        if (parseFloat(id) > 0 && parseFloat(id) < orders.products.length + 1) return true;
+                        else return "\nChoose a number between 0 - " + orders.products.length + ".";
                     }
-                    else return "\nThat is not a valid number! Please choose a number between 0 - 10.";
+                    else return "\nThat is not a valid number! Please choose a number between 0 - " + orders.products.length + ".";
                 },
                 name: 'productID'
             },

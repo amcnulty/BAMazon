@@ -113,37 +113,37 @@ var manager = {
             for (var i = 0; i < results.length; i++) {
                 console.log("\nProduct ID: " + results[i].item_id + "\nProduct Name: " + results[i].product_name + "\nPrice: " + results[i].price + "\nStock Quantity: " + results[i].stock_quantity);
             }
-        });
-        inquirer.prompt([
-            {
-                type: 'input',
-                message: '\n\nEnter the ID of the product you would like to add more of.',
-                validate: function(id) {
-                    if (Number.isInteger(parseFloat(id))) {
-                        if (parseFloat(id) > 0 && parseFloat(id) < 11) return true;
-                        else return "\nChoose a number between 0 - 10.";
-                    }
-                    else return "\nThat is not a valid number! Please choose a number between 0 - 10.";
+            inquirer.prompt([
+                {
+                    type: 'input',
+                    message: '\n\nEnter the ID of the product you would like to add more of.',
+                    validate: function(id) {
+                        if (Number.isInteger(parseFloat(id))) {
+                            if (parseFloat(id) > 0 && parseFloat(id) < results.length + 1) return true;
+                            else return "\nChoose a number between 0 - 10.";
+                        }
+                        else return "\nThat is not a valid number! Please choose a number between 0 - 10.";
+                    },
+                    name: 'productID'
                 },
-                name: 'productID'
-            },
-            {
-                type: 'input',
-                message: 'How many units would you like to add to the inventory?',
-                validate: function(quantity) {
-                    if (Number.isInteger(parseFloat(quantity))) {
-                        if (parseFloat(quantity) > 0) return true;
-                        else return "\nChoose a number greater than 0.";
-                    }
-                    else return "\nPlease enter a valid number greater than 0."
-                },
-                name: 'productQuantity'
-            }
-        ]).then(function(answers) {
-            manager.connection.query("UPDATE products SET stock_quantity = stock_quantity + " + answers.productQuantity + " WHERE item_id = " + answers.productID, function(err, results) {
-                if (err) throw err;
-                console.log("\n" + answers.productQuantity + " units added to inventory.");
-                manager.showMenu();
+                {
+                    type: 'input',
+                    message: 'How many units would you like to add to the inventory?',
+                    validate: function(quantity) {
+                        if (Number.isInteger(parseFloat(quantity))) {
+                            if (parseFloat(quantity) > 0) return true;
+                            else return "\nChoose a number greater than 0.";
+                        }
+                        else return "\nPlease enter a valid number greater than 0."
+                    },
+                    name: 'productQuantity'
+                }
+            ]).then(function(answers) {
+                manager.connection.query("UPDATE products SET stock_quantity = stock_quantity + " + answers.productQuantity + " WHERE item_id = " + answers.productID, function(err, results) {
+                    if (err) throw err;
+                    console.log("\n" + answers.productQuantity + " units added to inventory.");
+                    manager.showMenu();
+                });
             });
         });
     },
