@@ -89,7 +89,29 @@ var supervisor = {
         });
     },
     createNewDepartment: function() {
-        console.log("Creating New Department"); 
+        console.log("Creating New Department");
+        inquirer.prompt([
+            {
+                type: 'input',
+                message: "\nEnter the name of the new department.",
+                name: 'departmentName'
+            },
+            {
+                type: 'input',
+                message: "\nEnter the overhead cost for this department.",
+                validate: function(overhead) {
+                    if (Number.isNaN(parseFloat(overhead)) || parseFloat(overhead) <= 0) return "\nPlease enter a valid number greater than 0.";
+                    else return true;
+                },
+                name: 'departmentOverhead'
+            }
+        ]).then(function(answers) {
+            supervisor.connection.query("INSERT INTO departments (department_name, over_head_costs) VALUES('" + answers.departmentName + "', " + answers.departmentOverhead + ")", function(err, results) {
+                if (err) throw err;
+                console.log("\n" + answers.departmentName + " department created successfully!!");
+                supervisor.showMenu();
+            });
+        });
     },
     /**
      * Ends database connection, thanks customer, and exits application.
