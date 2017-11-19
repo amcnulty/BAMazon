@@ -32,9 +32,9 @@ var supervisor = {
      * A handle for the connection to the MySQL database.
      */
     connection: MYSQL.createConnection({
-        host: "localhost",
-        port: "3306",
-        user: "root",
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        user: process.env.DB_USER,
         password: process.env.DB_PASS,
         database: "bamazon"
     }),
@@ -68,8 +68,13 @@ var supervisor = {
             supervisor[supervisor.actionsMap[answers.action]]();
         });
     },
+    /**
+     * Displays the total sales and profit per department.
+     * 
+     * @since 1.0.0
+     * @fires supervisor.showMenu()
+     */
     showDepartmentSales: function() {
-        console.log("Showing Department Sales.");
         supervisor.connection.query('SELECT department_id, departments.department_name, over_head_costs, SUM(product_sales) AS product_sales, (SUM(product_sales) - over_head_costs) AS total_profit FROM products INNER JOIN departments ON products.department_name = departments.department_name GROUP BY departments.department_name;', function(err, results) {
             if (err) throw err;
             var myTable = [];
@@ -88,8 +93,13 @@ var supervisor = {
             supervisor.showMenu();
         });
     },
+    /**
+     * Allows user to create a new department in the database.
+     * 
+     * @since 1.0.0
+     * @fires supervisor.showMenu()
+     */
     createNewDepartment: function() {
-        console.log("Creating New Department");
         inquirer.prompt([
             {
                 type: 'input',
@@ -126,7 +136,9 @@ var supervisor = {
         })
     }
 }
-
+/**
+ * Connects this app to the database then displays the main menu.
+ */
 supervisor.connection.connect(function(err) {
     if (err) throw err;
     supervisor.showMenu();
