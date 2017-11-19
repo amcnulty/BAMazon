@@ -19,6 +19,7 @@
  */
 // Include depended files and libraries.
 require('dotenv').config();
+require('console.table');
 const inquirer = require('inquirer');
 const MYSQL = require('mysql');
 /**
@@ -59,11 +60,25 @@ var orders = {
      * Displays all of the products in the orders.products array to the console.
      * 
      * @since 1.0.0
+     * @param {Function} callback - called when products have been loaded and displayed.
      */
-    displayProducts: function() {
-        for (var i = 0; i < orders.products.length; i++) {
-            console.log("\nProduct ID: " + orders.products[i].item_id + "\nProduct Name: " + orders.products[i].product_name + "\nPrice: " + orders.products[i].price);
-        }
+    displayProducts: function(callback) {
+        orders.connection.query("SELECT item_id, product_name, price FROM products", function(err, results) {
+            if (err) throw err;
+            orders.products = results;
+            var myTable = [];
+            for (var i = 0; i < results.length; i++) {
+                myTable.push(
+                    {
+                        "Product ID": results[i].item_id,
+                        "Product Name": results[i].product_name,
+                        "Price": results[i].price.toFixed(2)
+                    }
+                );
+            }
+            console.table(myTable);
+            callback();
+        });
     },
     /**
      * Gathers user input to determine what product the customer would like to purchase.
@@ -72,34 +87,35 @@ var orders = {
      * @fires orders.handleOrder()
      */
     promptUser: function() {
-        orders.displayProducts();
-        inquirer.prompt([
-            {
-                type: 'input',
-                message: '\nPlease enter the ID of the product you wish to buy.',
-                validate: function(id) {
-                    if (Number.isInteger(parseFloat(id))) {
-                        if (parseFloat(id) > 0 && parseFloat(id) < orders.products.length + 1) return true;
-                        else return "\nChoose a number between 0 - " + orders.products.length + ".";
-                    }
-                    else return "\nThat is not a valid number! Please choose a number between 0 - " + orders.products.length + ".";
+        orders.displayProducts(function() {
+            inquirer.prompt([
+                {
+                    type: 'input',
+                    message: '\nPlease enter the ID of the product you wish to buy.',
+                    validate: function(id) {
+                        if (Number.isInteger(parseFloat(id))) {
+                            if (parseFloat(id) > 0 && parseFloat(id) < orders.products.length + 1) return true;
+                            else return "\nChoose a number between 0 - " + orders.products.length + ".";
+                        }
+                        else return "\nThat is not a valid number! Please choose a number between 0 - " + orders.products.length + ".";
+                    },
+                    name: 'productID'
                 },
-                name: 'productID'
-            },
-            {
-                type: 'input',
-                message: 'How many would you like to buy?',
-                validate: function(id) {
-                    if (Number.isInteger(parseFloat(id))) {
-                        if (parseFloat(id) > 0) return true;
-                        else return "\nChoose a number greater than 0.";
-                    }
-                    else return "\nThat is not a valid quantity! Please choose a number greater than 0.";
-                },
-                name: 'productQuantity'
-            }
-        ]).then(function(answers) {
-            orders.handleOrder(answers);
+                {
+                    type: 'input',
+                    message: 'How many would you like to buy?',
+                    validate: function(id) {
+                        if (Number.isInteger(parseFloat(id))) {
+                            if (parseFloat(id) > 0) return true;
+                            else return "\nChoose a number greater than 0.";
+                        }
+                        else return "\nThat is not a valid quantity! Please choose a number greater than 0.";
+                    },
+                    name: 'productQuantity'
+                }
+            ]).then(function(answers) {
+                orders.handleOrder(answers);
+            });
         });
     },
     /**

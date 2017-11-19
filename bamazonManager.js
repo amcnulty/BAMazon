@@ -19,6 +19,7 @@
  */
 // Include depended files and libraries.
 require('dotenv').config();
+require('console.table');
 const inquirer = require('inquirer');
 const MYSQL = require('mysql');
 /**
@@ -80,9 +81,18 @@ var manager = {
     showProducts: function() {
         manager.connection.query("SELECT * FROM products", function(err, results) {
             if (err) throw err;
+            var myTable = [];
             for (var i = 0; i < results.length; i++) {
-                console.log("\nProduct ID: " + results[i].item_id + "\nProduct Name: " + results[i].product_name + "\nPrice: " + results[i].price + "\nStock Quantity: " + results[i].stock_quantity);
+                myTable.push(
+                    {
+                        "Product ID": results[i].item_id,
+                        "Product Name": results[i].product_name,
+                        "Price": results[i].price.toFixed(2),
+                        "Stock Quantity": results[i].stock_quantity
+                    }
+                );
             }
+            console.table(myTable);
             manager.showMenu();
         });
     },
@@ -95,9 +105,19 @@ var manager = {
     showLowInventory: function() {
         manager.connection.query("SELECT * FROM products WHERE stock_quantity < 5", function(err, results) {
             if (err) throw err;
+            var myTable = [];
             for (var i = 0; i < results.length; i++) {
-                console.log("\nProduct ID: " + results[i].item_id + "\nProduct Name: " + results[i].product_name + "\nPrice: " + results[i].price + "\nStock Quantity: " + results[i].stock_quantity);
+                myTable.push(
+                    {
+                        "Product ID": results[i].item_id,
+                        "Product Name": results[i].product_name,
+                        "Price": results[i].price.toFixed(2),
+                        "Stock Quantity": results[i].stock_quantity
+                    }
+                );
+                // console.log("\nProduct ID: " + results[i].item_id + "\nProduct Name: " + results[i].product_name + "\nPrice: " + results[i].price + "\nStock Quantity: " + results[i].stock_quantity);
             }
+            console.table(myTable);
             manager.showMenu();
         });
     },
@@ -110,9 +130,18 @@ var manager = {
     addToInventory: function() {
         manager.connection.query("SELECT * FROM products", function(err, results) {
             if (err) throw err;
+            var myTable = [];
             for (var i = 0; i < results.length; i++) {
-                console.log("\nProduct ID: " + results[i].item_id + "\nProduct Name: " + results[i].product_name + "\nPrice: " + results[i].price + "\nStock Quantity: " + results[i].stock_quantity);
+                myTable.push(
+                    {
+                        "Product ID": results[i].item_id,
+                        "Product Name": results[i].product_name,
+                        "Price": results[i].price.toFixed(2),
+                        "Stock Quantity": results[i].stock_quantity
+                    }
+                );
             }
+            console.table(myTable);
             inquirer.prompt([
                 {
                     type: 'input',

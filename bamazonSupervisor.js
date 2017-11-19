@@ -78,9 +78,9 @@ var supervisor = {
                     {
                         department_id: results[i].department_id,
                         department_name: results[i].department_name,
-                        over_head_costs: results[i].over_head_costs,
-                        product_sales: results[i].product_sales,
-                        total_profit: results[i].total_profit
+                        over_head_costs: results[i].over_head_costs.toFixed(2),
+                        product_sales: results[i].product_sales.toFixed(2),
+                        total_profit: results[i].total_profit.toFixed(2)
                     }
                 );
             }
